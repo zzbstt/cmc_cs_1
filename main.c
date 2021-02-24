@@ -22,19 +22,21 @@ void genmass(int *a, int n)
 	return;
 }
 
-void swap(int a, int b, int *counter)
+void swap(int *a, int *b, int *counter)
 { // свап
-	int tmp = a;
+	int tmp = *a;
 	(*counter)++;
-	a = b;
-	b = tmp;
+	*a = *b;
+	*b = tmp;
 }
 
 int cmp(int a, int b, int *compare)
 {//сравнение
     (*compare)++;
-    if (abs(a) < abs(b) || (b == INT_MIN)) return -1;
-    else if (abs(a) > abs(b) || (a == INT_MIN)) return 1;
+    if (b == INT_MIN) return -1;
+    if (a == INT_MIN) return 1;
+    if (abs(a) < abs(b)) return -1;
+    else if (abs(a) > abs(b)) return 1;
     else return 0;
 }
 
@@ -50,7 +52,7 @@ void simplechoice(int *a, int n, int *counter, int *compare)
 				minpos = j;
 			}
 		}
-		if (minpos != i) swap(a[minpos], a[i], counter);//меняем его с нашим элементом
+		if (minpos != i) swap(&a[minpos], &a[i], counter);//меняем его с нашим элементом
 	}
 }
 
@@ -73,9 +75,9 @@ void quicksort(int *a, int n, int *counter, int *compare)
         //Меняем элементы местами
         if (i <= j)
         {
-            if (!(abs(a[i]) == abs(mid) && abs(a[i]) == abs(mid)))
+            if (!(abs(a[i]) == abs(mid) && abs(a[j]) == abs(mid)))
             {
-                swap(a[i], a[j], counter);
+                swap(&a[i], &a[j], counter);
             }
             i++;
             j--;
@@ -146,17 +148,19 @@ int main(void) {
 		{
 			a[i] = b;
 			b += abs(gen());
-			if (b < a[i]) b = a[i] + 12;
+			if (b < a[i]) b = a[i] + 1;
 		}
 	}
 	else if (arraytype == 2)
 	{
 		int b = gen();
+		b = abs(b);
 		for (int i = 0; i < n; ++i)
 		{
 			a[i] = b;
-			b -= abs(gen());
-			if (b > a[i]) b = a[i] - 12;
+			int c = gen();
+			b -= abs(c) / 1000;
+			if (b > a[i]) b = a[i] - 1;
 		}
 	}
 	else
